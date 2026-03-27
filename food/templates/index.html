@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>Delicious Home Food, <span class="highlight">Delivered Daily.</span></h1>
+        <p>Pre-order today's fresh, home-cooked specials straight to your door.</p>
+    </div>
+</div>
+
+<section class="daily-menu">
+    <div class="section-header">
+        <h2>🔥 Today's Specials (Notices)</h2>
+        {% if current_user and current_user.is_verified %}
+        <a href="{{ url_for('add_food') }}" class="btn-primary">Post New Menu</a>
+        {% endif %}
+    </div>
+
+    {% if menus %}
+    <div class="menu-grid">
+        {% for menu in menus %}
+        <div class="menu-card">
+            <div class="card-img" style="background-image: url('{{ menu.image_url }}')">
+                <span class="price-tag">₹{{ "%.2f"|format(menu.price) }}</span>
+            </div>
+            <div class="card-content">
+                <h3>{{ menu.title }}</h3>
+                <p class="description">{{ menu.description }}</p>
+                <p class="date"><small>Cooked by {{ menu.seller_name }} • {{ menu.quantity }} available</small></p>
+
+                {% if current_user %}
+                {% if current_user.is_verified %}
+                {% if menu.quantity > 0 %}
+                <form action="{{ url_for('order', menu_id=menu.id) }}" method="POST">
+                    <button type="submit" class="btn-primary w-100">Order to My Address</button>
+                </form>
+                {% else %}
+                <button class="btn-outline w-100" disabled
+                    style="opacity: 0.5; cursor: not-allowed; margin-bottom: 10px;">Sold Out</button>
+                {% if current_user.id == menu.author_id %}
+                <form action="{{ url_for('delete_menu', menu_id=menu.id) }}" method="POST">
+                    <button type="submit" class="btn-primary w-100" style="background-color: #C62828;">Delete Sold Out
+                        Menu</button>
+                </form>
+                {% endif %}
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('verify_otp') }}" class="btn-warning w-100 text-center block">Verify OTP to
+                    Order</a>
+                {% endif %}
+                {% else %}
+                <a href="{{ url_for('login_customer') }}" class="btn-outline w-100 text-center block">Login to Order</a>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <span class="icon" style="font-size: 4rem;">🍽️</span>
+        <h3>No menus posted yet!</h3>
+        <p>Check back later for today's delicious updates.</p>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

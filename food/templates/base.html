@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshBite Home Food Delivery</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{{ url_for('index') }}" class="logo">
+                <span class="icon">🌶️</span> FreshBite
+            </a>
+            <div class="nav-links">
+                <a href="{{ url_for('index') }}">Today's Menu</a>
+
+                {% if current_user %}
+                {% if not current_user.is_verified %}
+                <a href="{{ url_for('verify_otp') }}" class="btn-warning">Verify OTP</a>
+                {% else %}
+                    {% if current_user.role == 'admin' %}
+                    <a href="{{ url_for('seller_dashboard') }}" class="btn-secondary">Producer Dashboard</a>
+                    {% endif %}
+                {% endif %}
+
+                <span class="user-greeting">Hi, {{ current_user.username }}</span>
+                <a href="{{ url_for('logout') }}" class="btn-outline">Logout</a>
+                {% else %}
+                <a href="{{ url_for('login_customer') }}" class="nav-item">Customer Login</a>
+                <a href="{{ url_for('login_producer') }}" class="nav-item">Producer Login</a>
+                <a href="{{ url_for('register') }}" class="btn-primary">Sign Up</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages Container -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 FreshBite Home Delivery. All rights reserved.</p>
+    </footer>
+
+    <!-- Script to auto-hide flash messages -->
+    <script>
+        setTimeout(function () {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(alert => {
+                alert.style.opacity = '0';
+                setTimeout(() => alert.remove(), 500);
+            });
+        }, 5000);
+    </script>
+</body>
+
+</html>

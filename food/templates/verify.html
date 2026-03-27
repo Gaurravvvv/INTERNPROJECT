@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="auth-card">
+        <div class="icon-header" style="font-size: 3rem; text-align: center;">📱</div>
+        <h2 class="auth-title">Verify Address using OTP</h2>
+        <p class="auth-subtitle">Please check the console/logs. We've "sent" a 6-digit code to verify your account.</p>
+
+        <form method="POST" action="{{ url_for('verify_otp') }}" class="auth-form mt-4">
+            <div class="form-group" style="text-align: center;">
+                <label for="otp_code">Enter 6-digit OTP</label>
+                <input type="text" id="otp_code" name="otp_code" required
+                    style="text-align: center; font-size: 1.5rem; letter-spacing: 0.5rem;" maxlength="6"
+                    placeholder="000000">
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%;">Verify & Continue</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

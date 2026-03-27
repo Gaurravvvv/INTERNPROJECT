@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h2>👨‍🍳 Admin Portal</h2>
+        <p>Post today's new food specials and daily updates.</p>
+    </div>
+
+    <div class="auth-card" style="margin: 0 auto; max-width: 600px;">
+        <form method="POST" action="{{ url_for('admin') }}" class="auth-form">
+            <div class="form-group">
+                <label for="title">Update Title (Dish Name)</label>
+                <input type="text" id="title" name="title" required placeholder="e.g. Grandma's Special Lasagna">
+            </div>
+
+            <div class="form-group">
+                <label for="description">Delicious Description</label>
+                <textarea id="description" name="description" rows="4" required
+                    placeholder="Describe the flavors, ingredients, and why it's special today!"></textarea>
+            </div>
+
+            <div class="row">
+                <div class="form-group" style="flex: 1; margin-right: 15px;">
+                    <label for="price">Price ($)</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" required placeholder="12.99">
+                </div>
+
+                <div class="form-group" style="flex: 2;">
+                    <label for="image_url">Food Image URL</label>
+                    <input type="url" id="image_url" name="image_url"
+                        placeholder="Optional. Default delicious image will be used.">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary w-100 mt-4">Post Daily Special</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

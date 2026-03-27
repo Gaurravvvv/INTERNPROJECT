@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1>👨‍🍳 Producer <span class="highlight">Dashboard</span>.</h1>
+        <p>Manage your daily specials and track what's available.</p>
+        <a href="{{ url_for('add_food') }}" class="btn-primary" style="margin-top: 20px; display: inline-block;">Post New Menu</a>
+    </div>
+</div>
+
+<section class="daily-menu">
+    <div class="section-header">
+        <h2>Your Posted Menus</h2>
+    </div>
+
+    {% if menus %}
+    <div class="menu-grid">
+        {% for menu in menus %}
+        <div class="menu-card">
+            <div class="card-img" style="background-image: url('{{ menu.image_url }}')">
+                <span class="price-tag">₹{{ "%.2f"|format(menu.price) }}</span>
+            </div>
+            <div class="card-content">
+                <h3>{{ menu.title }}</h3>
+                <p class="description">{{ menu.description }}</p>
+                <p class="date"><small>{{ menu.quantity }} available</small></p>
+
+                {% if menu.quantity > 0 %}
+                <button class="btn-primary w-100" disabled style="opacity: 0.7; cursor: default;">Active - On Sale</button>
+                {% else %}
+                <button class="btn-outline w-100" disabled style="opacity: 0.5; padding: 10px; margin-bottom: 10px;">Sold Out</button>
+                <form action="{{ url_for('delete_menu', menu_id=menu.id) }}" method="POST">
+                    <button type="submit" class="btn-primary w-100" style="background-color: #C62828;">Delete Sold Out Menu</button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <span class="icon" style="font-size: 4rem;">🍽️</span>
+        <h3>No menus posted yet!</h3>
+        <p>Start posting your delicious home-cooked meals.</p>
+        <br>
+        <a href="{{ url_for('add_food') }}" class="btn-primary">Post New Menu</a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
