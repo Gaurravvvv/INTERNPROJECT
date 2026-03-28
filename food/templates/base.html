@@ -34,8 +34,7 @@
                 <span class="user-greeting">Hi, {{ current_user.username }}</span>
                 <a href="{{ url_for('logout') }}" class="btn-outline">Logout</a>
                 {% else %}
-                <a href="{{ url_for('login_customer') }}" class="nav-item">Customer Login</a>
-                <a href="{{ url_for('login_producer') }}" class="nav-item">Producer Login</a>
+                <a href="{{ url_for('login') }}" class="nav-item">Login</a>
                 <a href="{{ url_for('register') }}" class="btn-primary">Sign Up</a>
                 {% endif %}
             </div>

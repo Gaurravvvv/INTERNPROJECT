@@ -11,7 +11,7 @@
 <section class="daily-menu">
     <div class="section-header">
         <h2>🔥 Today's Specials (Notices)</h2>
-        {% if current_user and current_user.is_verified %}
+        {% if current_user and current_user.is_verified and current_user.role == 'admin' %}
         <a href="{{ url_for('add_food') }}" class="btn-primary">Post New Menu</a>
         {% endif %}
     </div>
@@ -49,7 +49,7 @@
                     Order</a>
                 {% endif %}
                 {% else %}
-                <a href="{{ url_for('login_customer') }}" class="btn-outline w-100 text-center block">Login to Order</a>
+                <a href="{{ url_for('login') }}" class="btn-outline w-100 text-center block">Login to Order</a>
                 {% endif %}
             </div>
         </div>

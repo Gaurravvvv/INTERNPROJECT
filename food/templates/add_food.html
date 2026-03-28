@@ -8,7 +8,7 @@
     </div>
 
     <div class="auth-card" style="margin: 0 auto; max-width: 600px;">
-        <form method="POST" action="{{ url_for('add_food') }}" class="auth-form">
+        <form method="POST" action="{{ url_for('add_food') }}" enctype="multipart/form-data" class="auth-form">
             <div class="form-group">
                 <label for="title">Update Title (Dish Name)</label>
                 <input type="text" id="title" name="title" required placeholder="e.g. Grandma's Special Lasagna">
@@ -32,9 +32,8 @@
                 </div>
 
                 <div class="form-group" style="flex: 2;">
-                    <label for="image_url">Food Image URL</label>
-                    <input type="url" id="image_url" name="image_url"
-                        placeholder="Optional. Default delicious image...">
+                    <label for="image_file">Food Image</label>
+                    <input type="file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg, .gif, .webp">
                 </div>
             </div>
 
