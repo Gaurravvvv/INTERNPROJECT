@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Your Cart</h2>
+<div class="cart-container" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+    {% if cart %}
+    <table style="width: 100%; border-collapse: collapse; text-align: left; margin-bottom: 20px;">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px 0;">Item</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set totals = [] %}
+            {% for item in cart %}
+            {% set subtotal = item.price * item.qty %}
+            {% set _ = totals.append(subtotal) %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 15px 0;">{{ item.title }}</td>
+                <td>${{ "%.2f"|format(item.price) }}</td>
+                <td>{{ item.qty }}</td>
+                <td><strong>${{ "%.2f"|format(subtotal) }}</strong></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr style="font-size: 1.2rem;">
+                <td colspan="3" style="text-align: right; padding-top: 15px;"><strong>Total:</strong></td>
+                <td style="padding-top: 15px; color: #ff6b6b;"><strong>${{ "%.2f"|format(totals | sum) }}</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+    
+    <form action="{{ url_for('checkout') }}" method="POST" style="text-align: right;">
+        <button type="submit" class="btn-primary" style="font-size: 1.1rem; padding: 10px 30px;">Place Order</button>
+    </form>
+    
+    {% else %}
+    <p>Your cart is empty. <a href="{{ url_for('index') }}">Browse Menu</a></p>
+    {% endif %}
+</div>
+{% endblock %}

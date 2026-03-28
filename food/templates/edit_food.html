@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h2>✏️ Edit Food Item</h2>
+        <p>Update your listed dish details below.</p>
+    </div>
+
+    <div class="auth-card" style="margin: 0 auto; max-width: 600px;">
+        <form method="POST" action="{{ url_for('edit_food', menu_id=menu._id) }}" enctype="multipart/form-data" class="auth-form">
+            <div class="form-group">
+                <label for="title">Update Title (Dish Name)</label>
+                <input type="text" id="title" name="title" value="{{ menu.title }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Delicious Description</label>
+                <textarea id="description" name="description" rows="4" required>{{ menu.description }}</textarea>
+            </div>
+
+            <div class="row">
+                <div class="form-group" style="flex: 1; margin-right: 15px;">
+                    <label for="price">Price (₹ or $)</label>
+                    <input type="number" id="price" name="price" step="0.01" min="0" value="{{ menu.price }}" required>
+                </div>
+
+                <div class="form-group" style="flex: 1; margin-right: 15px;">
+                    <label for="quantity">Quantity Available</label>
+                    <input type="number" id="quantity" name="quantity" min="0" value="{{ menu.quantity }}" required>
+                </div>
+
+                <div class="form-group" style="flex: 2;">
+                    <label for="image_file">Update Image (Leave blank to keep current)</label>
+                    <input type="file" id="image_file" name="image_file" accept=".png, .jpg, .jpeg, .gif, .webp">
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary w-100 mt-4">Save Changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

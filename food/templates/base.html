@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +10,12 @@
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .nav-container { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px;}
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .cart-badge { background: red; color: white; padding: 2px 5px; border-radius: 5px; font-size: 0.8rem; }
+    </style>
 </head>
-
 <body>
     <nav class="navbar">
         <div class="nav-container">
@@ -20,18 +23,24 @@
                 <span class="icon">🌶️</span> FreshBite
             </a>
             <div class="nav-links">
-                <a href="{{ url_for('index') }}">Today's Menu</a>
+                
 
                 {% if current_user %}
-                {% if not current_user.is_verified %}
-                <a href="{{ url_for('verify_otp') }}" class="btn-warning">Verify OTP</a>
-                {% else %}
-                    {% if current_user.role == 'admin' %}
-                    <a href="{{ url_for('seller_dashboard') }}" class="btn-secondary">Producer Dashboard</a>
+                    {% if current_user.get('role') == 'seller' %}
+                    <a href="{{ url_for('seller_dashboard') }}">Dashboard</a>
+                    <a href="{{ url_for('add_food') }}" class="btn-secondary">Add Menu</a>
+                    {% else %}
+                    <a href="{{ url_for('index') }}">Today's Menu</a>
+                    <a href="{{ url_for('my_orders') }}">My Orders</a>
+                    <a href="{{ url_for('cart') }}" class="btn-secondary">
+                        Cart 
+                        {% if session.get('cart') %}
+                        <span class="cart-badge">{{ session.get('cart')|length }}</span>
+                        {% endif %}
+                    </a>
                     {% endif %}
-                {% endif %}
 
-                <span class="user-greeting">Hi, {{ current_user.username }}</span>
+                <span class="user-greeting">Hi, {{ current_user.get('username') }}</span>
                 <a href="{{ url_for('logout') }}" class="btn-outline">Logout</a>
                 {% else %}
                 <a href="{{ url_for('login') }}" class="nav-item">Login</a>
@@ -62,7 +71,6 @@
         <p>&copy; 2026 FreshBite Home Delivery. All rights reserved.</p>
     </footer>
 
-    <!-- Script to auto-hide flash messages -->
     <script>
         setTimeout(function () {
             const alerts = document.querySelectorAll('.alert');
@@ -73,5 +81,4 @@
         }, 5000);
     </script>
 </body>
-
 </html>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>My Orders</h2>
+<div class="orders-container">
+    {% if orders %}
+    <table style="width: 100%; border-collapse: collapse; text-align: left; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <thead>
+            <tr style="border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px;">Date/Time</th>
+                <th>Restaurant</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 15px 10px;">{{ order.created_at.strftime('%Y-%m-%d %H:%M') if order.created_at else 'N/A' }}</td>
+                <td>{{ order.seller_name }}</td>
+                <td>
+                    {% for item in order['items'] %}
+                    {{ item.qty }}x {{ item.title }}<br>
+                    {% endfor %}
+                </td>
+                <td>${{ "%.2f"|format(order.total_price) }}</td>
+                <td>
+                    <span style="padding: 4px 8px; border-radius: 12px; font-size: 0.8rem; color: white; background: {{ '#007bff' if order.status == 'Pending' else ('#28a745' if order.status == 'Accepted' else '#dc3545') }};">
+                        {{ order.status }}
+                    </span>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>You haven't placed any orders yet. <a href="{{ url_for('index') }}">Browse Menu</a></p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,66 +1,42 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="hero">
-    <div class="hero-content">
-        <h1>Delicious Home Food, <span class="highlight">Delivered Daily.</span></h1>
-        <p>Pre-order today's fresh, home-cooked specials straight to your door.</p>
-    </div>
+<div class="welcome-banner text-center" style="margin-bottom: 20px;">
+    <h2>Discover Great Food Near You!</h2>
+    <p>Browse what restaurants have prepared today.</p>
+    
+    <form method="GET" action="{{ url_for('index') }}" style="max-width: 500px; margin: 20px auto; display: flex; gap: 10px;">
+        <input type="text" name="q" placeholder="Search for food, e.g., pizza, cake..." value="{{ request.args.get('q', '') }}" style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 4px;">
+        <button type="submit" class="btn-primary" style="padding: 10px 20px;">Search</button>
+        {% if request.args.get('q') %}
+        <a href="{{ url_for('index') }}" class="btn-outline" style="padding: 10px 20px;">Clear</a>
+        {% endif %}
+    </form>
 </div>
 
-<section class="daily-menu">
-    <div class="section-header">
-        <h2>🔥 Today's Specials (Notices)</h2>
-        {% if current_user and current_user.is_verified and current_user.role == 'admin' %}
-        <a href="{{ url_for('add_food') }}" class="btn-primary">Post New Menu</a>
-        {% endif %}
-    </div>
-
-    {% if menus %}
-    <div class="menu-grid">
-        {% for menu in menus %}
-        <div class="menu-card">
-            <div class="card-img" style="background-image: url('{{ menu.image_url }}')">
-                <span class="price-tag">₹{{ "%.2f"|format(menu.price) }}</span>
+<div class="menu-grid">
+    {% for menu in menus %}
+    <div class="menu-card">
+        <img src="{{ menu.image_url }}" alt="{{ menu.title }}" class="menu-img">
+        <div class="menu-content">
+            <h3 class="menu-title">{{ menu.title }}</h3>
+            <p class="menu-desc">{{ menu.description }}</p>
+            <p><strong>By:</strong> {{ menu.seller_name }}</p>
+            <div class="menu-footer">
+                <span class="price">${{ "%.2f"|format(menu.price) }}</span>
+                <span class="qty">Available: {{ menu.quantity }}</span>
             </div>
-            <div class="card-content">
-                <h3>{{ menu.title }}</h3>
-                <p class="description">{{ menu.description }}</p>
-                <p class="date"><small>Cooked by {{ menu.seller_name }} • {{ menu.quantity }} available</small></p>
-
-                {% if current_user %}
-                {% if current_user.is_verified %}
-                {% if menu.quantity > 0 %}
-                <form action="{{ url_for('order', menu_id=menu.id) }}" method="POST">
-                    <button type="submit" class="btn-primary w-100">Order to My Address</button>
-                </form>
-                {% else %}
-                <button class="btn-outline w-100" disabled
-                    style="opacity: 0.5; cursor: not-allowed; margin-bottom: 10px;">Sold Out</button>
-                {% if current_user.id == menu.author_id %}
-                <form action="{{ url_for('delete_menu', menu_id=menu.id) }}" method="POST">
-                    <button type="submit" class="btn-primary w-100" style="background-color: #C62828;">Delete Sold Out
-                        Menu</button>
-                </form>
-                {% endif %}
-                {% endif %}
-                {% else %}
-                <a href="{{ url_for('verify_otp') }}" class="btn-warning w-100 text-center block">Verify OTP to
-                    Order</a>
-                {% endif %}
-                {% else %}
-                <a href="{{ url_for('login') }}" class="btn-outline w-100 text-center block">Login to Order</a>
-                {% endif %}
-            </div>
+            
+            {% if menu.quantity > 0 %}
+            <form action="{{ url_for('add_to_cart', menu_id=menu._id) }}" method="POST" style="margin-top: 10px;">
+                <button type="submit" class="btn-primary" style="width: 100%;">Add to Cart</button>
+            </form>
+            {% else %}
+            <button class="btn-outline" style="width: 100%; margin-top:10px;" disabled>Sold Out</button>
+            {% endif %}
         </div>
-        {% endfor %}
     </div>
     {% else %}
-    <div class="empty-state">
-        <span class="icon" style="font-size: 4rem;">🍽️</span>
-        <h3>No menus posted yet!</h3>
-        <p>Check back later for today's delicious updates.</p>
-    </div>
-    {% endif %}
-</section>
+    <p class="text-center" style="grid-column: 1 / -1;">No food updates available right now. Check back later!</p>
+    {% endfor %}
+</div>
 {% endblock %}
